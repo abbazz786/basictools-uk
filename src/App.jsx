@@ -6,6 +6,7 @@ import { useState, useRef } from "react";
    ═══════════════════════════════════════════════ */
 
 const fmt = (n) => new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP", minimumFractionDigits: 2 }).format(n);
+const fmtBig = (n) => new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n);
 
 /* ─── TAX CALCULATOR (EMBEDDED) ─── */
 const TAX_YEARS = {
