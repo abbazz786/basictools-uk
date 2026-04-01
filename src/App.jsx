@@ -8,6 +8,13 @@ import { useState, useRef } from "react";
 const fmt = (n) => new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP", minimumFractionDigits: 2 }).format(n);
 const fmtBig = (n) => new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n);
 
+const printHTML = (title, body) => {
+  const w = window.open("","_blank");
+  w.document.write(`<html><head><title>${title} — BasicTools UK</title><style>@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');*{margin:0;padding:0;box-sizing:border-box}body{font-family:'DM Sans',sans-serif;color:#1a1a2e;padding:40px;max-width:700px;margin:0 auto}h1{font-size:22px;font-weight:700;margin-bottom:4px}h2{font-size:14px;color:#555;margin-bottom:24px}.summary{display:flex;gap:16px;margin-bottom:24px}.summary-box{flex:1;text-align:center;padding:16px;border:2px solid #e5e7eb;border-radius:10px}.summary-box .label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#888;margin-bottom:4px}.summary-box .value{font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace}.red{color:#dc2626}.green{color:#16a34a}.amber{color:#d97706}.blue{color:#2563eb}.section{margin-bottom:20px;padding:20px;background:#f9fafb;border-radius:10px}.section-title{font-size:10px;text-transform:uppercase;letter-spacing:1.8px;font-weight:700;margin-bottom:12px}.row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px solid #f0f0f0}.row .val{font-family:'JetBrains Mono',monospace;font-weight:500}.row-total{font-weight:700;border-bottom:2px solid #e5e7eb;padding:8px 0}.tip{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:14px 18px;font-size:13px;line-height:1.6;margin-bottom:16px}.note{font-size:10px;color:#888;line-height:1.5;margin-top:16px}.footer{margin-top:32px;text-align:center;font-size:10px;color:#aaa;padding-top:16px;border-top:1px solid #e5e7eb}table{width:100%;border-collapse:collapse;margin-bottom:16px}th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#888;padding:8px 6px;border-bottom:2px solid #e5e7eb}th:not(:first-child){text-align:right}td{padding:8px 6px;font-size:12px;border-bottom:1px solid #f0f0f0}td:not(:first-child){text-align:right;font-family:'JetBrains Mono',monospace}.highlight{background:#eff6ff;font-weight:600}.result-box{text-align:center;padding:24px;border:2px solid;border-radius:12px;margin-bottom:16px}.underpaid{border-color:#dc2626;background:#fef2f2}.legal{border-color:#16a34a;background:#f0fdf4}.shortfall{display:flex;gap:12px;margin:12px 0}.shortfall-item{flex:1;text-align:center;padding:10px;background:#fff;border-radius:8px;border:1px solid #fecaca}.shortfall-item .label{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:2px}.shortfall-item .value{font-size:16px;font-weight:700;color:#dc2626;font-family:'JetBrains Mono',monospace}@media print{body{padding:20px}.section{background:#f9fafb!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body>${body}<div class="footer">Generated with BasicTools UK · basictools.uk</div></body></html>`);
+  w.document.close();
+  setTimeout(() => w.print(), 400);
+};
+
 /* ─── TAX CALCULATOR (EMBEDDED) ─── */
 const TAX_YEARS = {
   "2025/26": { label:"2025/26", pa:12570, brl:50270, hrl:125140, br:0.20, hr:0.40, ar:0.45, c4l:12570, c4u:50270, c4m:0.06, c4a:0.02, c2w:3.50, c2a:182.00, pt:100000 },
@@ -44,6 +51,48 @@ function TaxTool({ onBack }) {
   const profit = Math.max(0, (parseFloat(inc)||0) - (parseFloat(exp)||0));
   const r = calcTax(profit, yk, pc2);
   const ok = profit > 0;
+
+  const handleTaxPrint = () => {
+    const rows = [
+      ['Personal Allowance', fmt(r.pa)],
+      ['Basic rate (20%)', fmt(r.bt)],
+      ...(r.ht > 0 ? [['Higher rate (40%)', fmt(r.ht)]] : []),
+      ...(r.at > 0 ? [['Additional rate (45%)', fmt(r.at)]] : []),
+    ];
+    const nicRows = [
+      ['Class 4 at 6%', fmt(r.c4m)],
+      ...(r.c4a > 0 ? [['Class 4 at 2% (above £50,270)', fmt(r.c4a)]] : []),
+      ...(r.c2 > 0 ? [['Class 2 voluntary', fmt(r.c2)]] : []),
+    ];
+    printHTML('Tax Calculation', `
+      <h1>Self-Employed Tax Calculation</h1>
+      <h2>Tax Year ${yk} · England, Wales & Northern Ireland</h2>
+      <div class="summary">
+        <div class="summary-box"><div class="label">Total Tax</div><div class="value red">${fmt(r.tot)}</div></div>
+        <div class="summary-box"><div class="label">Take Home</div><div class="value green">${fmt(r.th)}</div></div>
+        <div class="summary-box"><div class="label">Effective Rate</div><div class="value amber">${r.er.toFixed(1)}%</div></div>
+      </div>
+      <div class="section">
+        <div class="section-title" style="color:#d97706">Income Tax</div>
+        ${rows.map(([l,v]) => `<div class="row"><span>${l}</span><span class="val">${v}</span></div>`).join('')}
+        <div class="row row-total"><span>Income Tax</span><span class="val red">${fmt(r.it)}</span></div>
+      </div>
+      <div class="section">
+        <div class="section-title" style="color:#d97706">National Insurance</div>
+        ${nicRows.map(([l,v]) => `<div class="row"><span>${l}</span><span class="val">${v}</span></div>`).join('')}
+        <div class="row row-total"><span>NIC Total</span><span class="val red">${fmt(r.c4+r.c2)}</span></div>
+      </div>
+      <div class="section" style="background:#fef2f2">
+        <div class="row row-total" style="border:none"><span style="font-size:16px">Total Due to HMRC</span><span class="val red" style="font-size:18px">${fmt(r.tot)}</span></div>
+        <div class="row row-total" style="border:none"><span style="font-size:18px;color:#16a34a">You Keep</span><span class="val green" style="font-size:20px">${fmt(r.th)}</span></div>
+      </div>
+      <div class="tip">
+        <strong style="color:#d97706">Set aside each month:</strong> Save ${fmt(r.tot/12)}/month (${r.er.toFixed(1)}% of profit) for your Self Assessment bill.
+      </div>
+      <div class="note"><strong>Important:</strong> England, Wales & NI only. Does not include student loans, pensions, or dividends. Rates verified from GOV.UK, 31 Mar 2026. Not financial advice.</div>
+    `);
+  };
+
   const inp = { width:"100%",padding:"11px 12px",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"7px",color:"#fff",fontSize:"15px",fontFamily:"'JetBrains Mono',sans-serif",outline:"none" };
   const lbl = { fontSize:"11px",color:"#888",marginBottom:"5px",display:"block" };
   const sec = { background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.06)",borderRadius:"12px",padding:"22px",marginBottom:"14px" };
@@ -110,6 +159,7 @@ function TaxTool({ onBack }) {
           <div style={{ fontSize:"13px",fontWeight:"700",color:"#f59e0b",marginBottom:"6px" }}>Set aside each month</div>
           <div style={{ fontSize:"13px",color:"#ccc",lineHeight:"1.5" }}>Save <strong style={{ color:"#fff" }}>{fmt(r.tot/12)}</strong>/month ({r.er.toFixed(1)}% of profit) for your Self Assessment bill.</div>
         </div>
+        <button onClick={handleTaxPrint} style={{ width:"100%",padding:"13px",border:"1px solid rgba(245,158,11,0.3)",borderRadius:"8px",fontSize:"14px",fontWeight:"700",cursor:"pointer",background:"rgba(245,158,11,0.08)",color:"#f59e0b",marginBottom:"14px",display:"flex",alignItems:"center",justifyContent:"center",gap:"8px" }}>🖨️ Print / Save as PDF</button>
         <div style={{ fontSize:"10px",color:"#555",lineHeight:"1.5",padding:"8px 0" }}>
           <strong style={{ color:"#777" }}>Important:</strong> England, Wales & NI only. Does not include student loans, pensions, or dividends. Rates verified from GOV.UK & House of Commons Library, 31 Mar 2026. Not financial advice.
         </div>
@@ -293,6 +343,79 @@ function WageTool({ onBack }) {
   const dW=(nR-oR)*wH, dA=dW*52;
   const canCheck = age&&hours&&pay&&parseInt(age)>=14;
 
+  const handleWagePrint = () => {
+    if (!result) return;
+    const statusClass = result.under ? 'underpaid' : 'legal';
+    const statusIcon = result.under ? '⚠️' : '✅';
+    const statusText = result.under ? 'YOU ARE BEING UNDERPAID' : 'YOUR PAY IS LEGAL';
+    const statusColor = result.under ? '#dc2626' : '#16a34a';
+    printHTML('Wage Check Result', `
+      <h1>National Wage Check</h1>
+      <h2>UK Rates from GOV.UK · April 2026</h2>
+      <div class="result-box ${statusClass}">
+        <div style="font-size:36px;margin-bottom:6px">${statusIcon}</div>
+        <div style="font-size:20px;font-weight:700;color:${statusColor};margin-bottom:8px">${statusText}</div>
+        <div style="font-size:13px;color:#555">Your rate: <strong style="font-family:'JetBrains Mono',monospace">${fmt(result.eff)}/hr</strong> · Minimum: <strong style="font-family:'JetBrains Mono',monospace">${fmt(result.rate)}/hr</strong></div>
+        <div style="font-size:12px;color:#888;margin-top:4px">${result.band}</div>
+      </div>
+      ${result.under ? `
+        <div class="shortfall">
+          ${[['Week', result.shortW], ['Month', result.shortM], ['Year', result.shortY]].map(([l,v]) =>
+            `<div class="shortfall-item"><div class="label">${l}</div><div class="value">${fmtBig(v)}</div></div>`
+          ).join('')}
+        </div>
+        <div class="tip" style="background:#fef2f2;border-color:#fecaca">
+          Talk to your employer first. If nothing changes, call <strong>ACAS: 0300 123 1100</strong> (free). Report to HMRC — fines up to 200% of underpayment. It's illegal to dismiss you for this.
+        </div>
+      ` : `<div class="tip" style="background:#f0fdf4;border-color:#bbf7d0">You're ${fmt(result.over)} above minimum per hour. Your employer is paying you correctly.</div>`}
+      <div class="section">
+        <div class="section-title" style="color:#2563eb">Your Details</div>
+        <div class="row"><span>Age</span><span class="val">${age}</span></div>
+        <div class="row"><span>Hours/Week</span><span class="val">${hours}</span></div>
+        <div class="row"><span>Gross Pay</span><span class="val">${fmt(parseFloat(pay))} ${period}</span></div>
+        ${isApp ? `<div class="row"><span>Apprentice</span><span class="val">${appY1 ? 'First year' : 'Past first year'}</span></div>` : ''}
+      </div>
+      <div class="note">Source: GOV.UK National Minimum Wage rates. ACAS helpline: 0300 123 1100.</div>
+    `);
+  };
+
+  const handleRaisePrint = () => {
+    if (!showInc || wH <= 0) return;
+    const bandLabel = NMW_BANDS.find(b => b.id === band)?.label || band;
+    printHTML('Wage Rise Calculation', `
+      <h1>Your April 2026 Wage Rise</h1>
+      <h2>${bandLabel}</h2>
+      <div class="summary">
+        <div class="summary-box"><div class="label">Old Rate</div><div class="value">${fmt(oR)}/hr</div></div>
+        <div class="summary-box"><div class="label">New Rate</div><div class="value blue">${fmt(nR)}/hr</div></div>
+        <div class="summary-box"><div class="label">Increase</div><div class="value green">+${((nR-oR)/oR*100).toFixed(1)}%</div></div>
+      </div>
+      <div class="section" style="text-align:center;background:#eff6ff">
+        <div style="font-size:13px;color:#888;margin-bottom:4px">Extra per year</div>
+        <div style="font-size:32px;font-weight:700;color:#2563eb;font-family:'JetBrains Mono',monospace">${fmtBig(dA)}</div>
+      </div>
+      <div class="section">
+        <div class="section-title" style="color:#2563eb">Breakdown at ${wH} hours/week</div>
+        <div class="row"><span>Weekly increase</span><span class="val green">+${fmt(dW)}</span></div>
+        <div class="row"><span>Monthly increase</span><span class="val green">+${fmt(dW*(52/12))}</span></div>
+        <div class="row row-total"><span>Annual increase</span><span class="val green">+${fmtBig(dA)}</span></div>
+      </div>
+      <div class="note">Source: GOV.UK National Minimum Wage and National Living Wage rates from April 2026.</div>
+    `);
+  };
+
+  const handleHistoryPrint = () => {
+    printHTML('UK Wage Rates History', `
+      <h1>UK Minimum Wage Rates 2018–2026</h1>
+      <h2>Source: GOV.UK</h2>
+      <table>
+        <thead><tr><th>Year</th><th style="text-align:right">NLW</th><th style="text-align:right">Age Band</th><th style="text-align:right">18-20</th><th style="text-align:right">16-17</th><th style="text-align:right">Apprentice</th></tr></thead>
+        <tbody>${NMW_HISTORY.map((h, i) => `<tr class="${i === NMW_HISTORY.length - 1 ? 'highlight' : ''}"><td>${h.year}</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600">${fmt(h.nlw)}</td><td style="text-align:right;color:#888;font-size:10px">${h.age}</td><td style="text-align:right;font-family:'JetBrains Mono',monospace">${fmt(h.r18)}</td><td style="text-align:right;font-family:'JetBrains Mono',monospace">${fmt(h.r16)}</td><td style="text-align:right;font-family:'JetBrains Mono',monospace">${fmt(h.app)}</td></tr>`).join('')}</tbody>
+      </table>
+      <div class="note">NLW age threshold changed: 25+ (2016–2021) → 23+ (2021–2024) → 21+ (2024 onwards). ACAS helpline: 0300 123 1100.</div>
+    `);
+  };
+
   return (
     <div>
       <div style={{ display:"flex",alignItems:"center",gap:"12px",marginBottom:"18px" }}>
@@ -354,6 +477,9 @@ function WageTool({ onBack }) {
               {!result.under&&<div style={{fontSize:"12px",color:"#888"}}>You're {fmt(result.over)} above minimum per hour.</div>}
             </div>
           )}
+          {result&&(
+            <button onClick={handleWagePrint} style={{ width:"100%",padding:"12px",border:"1px solid rgba(59,130,246,0.3)",borderRadius:"7px",fontSize:"13px",fontWeight:"700",cursor:"pointer",background:"rgba(59,130,246,0.08)",color:"#3b82f6",marginTop:"12px",display:"flex",alignItems:"center",justifyContent:"center",gap:"8px" }}>🖨️ Print / Save as PDF</button>
+          )}
         </div>
       )}
 
@@ -385,6 +511,9 @@ function WageTool({ onBack }) {
                 ))}
               </div>
             </div>
+          )}
+          {showInc&&wH>0&&(
+            <button onClick={handleRaisePrint} style={{ width:"100%",padding:"12px",border:"1px solid rgba(59,130,246,0.3)",borderRadius:"7px",fontSize:"13px",fontWeight:"700",cursor:"pointer",background:"rgba(59,130,246,0.08)",color:"#3b82f6",marginTop:"12px",display:"flex",alignItems:"center",justifyContent:"center",gap:"8px" }}>🖨️ Print / Save as PDF</button>
           )}
         </div>
       )}
@@ -421,6 +550,7 @@ function WageTool({ onBack }) {
               })}</tbody>
             </table>
           </div>
+          <button onClick={handleHistoryPrint} style={{ width:"100%",padding:"12px",border:"1px solid rgba(59,130,246,0.3)",borderRadius:"7px",fontSize:"13px",fontWeight:"700",cursor:"pointer",background:"rgba(59,130,246,0.08)",color:"#3b82f6",marginTop:"12px",display:"flex",alignItems:"center",justifyContent:"center",gap:"8px" }}>🖨️ Print / Save as PDF</button>
           <div style={{fontSize:"10px",color:"#555",marginTop:"8px",lineHeight:"1.5"}}>NLW age changed: 25+ (2016–2021) → 23+ (2021–2024) → 21+ (2024 onwards). Source: GOV.UK. ACAS helpline: 0300 123 1100.</div>
         </div>
       )}
