@@ -1,0 +1,42 @@
+# BasicTools UK
+> Free online tools for UK workers, freelancers, and small businesses. No sign-up. No data collection. All rates verified from GOV.UK.
+
+## About
+BasicTools UK provides free financial and business tools for people in the United Kingdom. Built by ScamShield UK (https://scamshield.org.uk). All tax rates and wage figures are sourced from GOV.UK and verified against the House of Commons Library as of 31 March 2026. This site does not provide financial advice.
+
+## Tools
+
+### UK Self-Employed Tax Calculator
+Calculate Income Tax and National Insurance for self-employed workers in England, Wales, and Northern Ireland. Covers 2025/26 and 2026/27 tax years.
+- Personal Allowance: 12,570 (tapers above 100,000)
+- Basic rate: 20% on profits 12,570 to 50,270
+- Higher rate: 40% on profits 50,270 to 125,140
+- Additional rate: 45% on profits above 125,140
+- Class 4 NIC: 6% main rate, 2% above 50,270
+- Class 2 NIC voluntary: 3.50/week (2025/26), 3.65/week (2026/27)
+- Source: https://www.gov.uk/income-tax-rates
+
+### UK National Minimum Wage Checker
+Check whether you are being paid at least the legal minimum wage. Includes underpayment calculator, April 2026 wage rise calculator, and historical rates from 2018 to 2026.
+
+UK Minimum Wage Rates from April 2026:
+- Age 21 and over (National Living Wage): 12.71/hour
+- Age 18 to 20: 10.85/hour
+- Age 16 to 17: 8.00/hour
+- Apprentice rate: 8.00/hour
+- Source: https://www.gov.uk/national-minimum-wage-rates
+- ACAS helpline for underpayment: 0300 123 1100
+
+### UK Invoice Generator
+Create professional invoices with VAT for UK businesses. Supports multiple line items, adjustable VAT rate (0-25%), and print/PDF export. No account required.
+
+### AI Scam Checker
+Paste a suspicious text, email, or WhatsApp message to check if it is a scam. Hosted at https://scamshield.org.uk.
+
+## Privacy
+BasicTools UK does not collect, store, or transmit any personal data. All calculations run entirely in the user's browser. No cookies. No analytics. No data leaves the device.
+
+## Contact
+- Website: https://basictools.uk
+- Parent project: https://scamshield.org.uk
+- Email: scamshield.org.uk@gmail.com

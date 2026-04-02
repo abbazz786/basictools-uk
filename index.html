@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,18 +7,172 @@
     <meta name="description" content="Free UK tax calculator, minimum wage checker, invoice generator. No sign-up. Verified from GOV.UK. Built for freelancers, workers, and small businesses." />
     <meta name="keywords" content="UK tax calculator, minimum wage UK 2026, free invoice generator, self employed tax, national living wage, basictools" />
     <meta name="robots" content="index, follow" />
+    <meta name="author" content="BasicTools UK" />
     <link rel="canonical" href="https://basictools.uk" />
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <!-- Open Graph -->
     <meta property="og:title" content="BasicTools UK — Free Tools for UK Workers & Small Businesses" />
     <meta property="og:description" content="Free tax calculator, wage checker, invoice generator. No sign-up needed. All rates verified from GOV.UK." />
     <meta property="og:url" content="https://basictools.uk" />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:site_name" content="BasicTools UK" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="BasicTools UK — Free Tools for UK Workers & Small Businesses" />
+    <meta name="twitter:description" content="Free tax calculator, wage checker, invoice generator. No sign-up needed. All rates verified from GOV.UK." />
 
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>" />
 
-    <!-- Google Analytics - replace UA-XXXXX with your ID -->
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://basictools.uk/#organization",
+          "name": "BasicTools UK",
+          "url": "https://basictools.uk",
+          "description": "Free online tools for UK freelancers, tradespeople, and small businesses. Tax calculator, minimum wage checker, invoice generator, and scam checker. No sign-up required.",
+          "foundingDate": "2026",
+          "parentOrganization": {
+            "@type": "Organization",
+            "name": "ScamShield UK",
+            "url": "https://scamshield.org.uk"
+          },
+          "sameAs": [
+            "https://scamshield.org.uk"
+          ],
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "email": "scamshield.org.uk@gmail.com",
+            "contactType": "customer support"
+          },
+          "areaServed": {
+            "@type": "Country",
+            "name": "United Kingdom"
+          },
+          "knowsLanguage": "en-GB"
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://basictools.uk/#website",
+          "name": "BasicTools UK",
+          "url": "https://basictools.uk",
+          "description": "Free UK tax calculator, minimum wage checker, invoice generator. No sign-up. Verified from GOV.UK.",
+          "publisher": { "@id": "https://basictools.uk/#organization" },
+          "inLanguage": "en-GB"
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://basictools.uk/#webpage",
+          "url": "https://basictools.uk",
+          "name": "BasicTools UK — Free Tools for UK Workers & Small Businesses",
+          "description": "Free UK tax calculator, minimum wage checker, invoice generator. No sign-up. Verified from GOV.UK. Built for freelancers, workers, and small businesses.",
+          "isPartOf": { "@id": "https://basictools.uk/#website" },
+          "about": { "@id": "https://basictools.uk/#organization" },
+          "inLanguage": "en-GB",
+          "speakable": {
+            "@type": "SpeakableSpecification",
+            "cssSelector": ["title", "meta[name='description']", "#seo-content"]
+          }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://basictools.uk/#tax-calculator",
+          "name": "UK Self-Employed Tax Calculator",
+          "description": "Free tax calculator for UK self-employed workers. Enter your income and expenses to see exactly what you owe HMRC — Income Tax and National Insurance, penny-accurate. Covers 2025/26 and 2026/27 tax years for England, Wales and Northern Ireland.",
+          "url": "https://basictools.uk",
+          "applicationCategory": "FinanceApplication",
+          "operatingSystem": "Any",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "GBP"
+          },
+          "featureList": "Income Tax calculation, Class 2 and Class 4 National Insurance, Personal Allowance tapering, 2025/26 and 2026/27 tax years, Print and save as PDF",
+          "author": { "@id": "https://basictools.uk/#organization" },
+          "inLanguage": "en-GB"
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://basictools.uk/#wage-checker",
+          "name": "UK National Minimum Wage Checker",
+          "description": "Check if you are being paid the correct UK minimum wage. Covers National Living Wage, age-based rates, and apprentice rates. See your April 2026 wage increase and view all UK rates since 2018.",
+          "url": "https://basictools.uk",
+          "applicationCategory": "FinanceApplication",
+          "operatingSystem": "Any",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "GBP"
+          },
+          "featureList": "Minimum wage compliance check, Underpayment calculation, April 2026 wage rise calculator, Historical rates 2018-2026, Print and save as PDF",
+          "author": { "@id": "https://basictools.uk/#organization" },
+          "inLanguage": "en-GB"
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://basictools.uk/#invoice-generator",
+          "name": "UK Invoice Generator",
+          "description": "Create professional UK invoices with VAT support. Free invoice generator for freelancers and small businesses. Print or save as PDF. No sign-up required.",
+          "url": "https://basictools.uk",
+          "applicationCategory": "BusinessApplication",
+          "operatingSystem": "Any",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "GBP"
+          },
+          "featureList": "Professional invoice layout, VAT calculation 0-25%, Multiple line items, Print and save as PDF, No account required",
+          "author": { "@id": "https://basictools.uk/#organization" },
+          "inLanguage": "en-GB"
+        },
+        {
+          "@type": "ItemList",
+          "@id": "https://basictools.uk/#tool-list",
+          "name": "BasicTools UK — Free Tools",
+          "description": "Collection of free tools for UK workers and small businesses",
+          "numberOfItems": 4,
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "AI Scam Checker",
+              "url": "https://scamshield.org.uk"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "UK Self-Employed Tax Calculator",
+              "url": "https://basictools.uk"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "UK National Minimum Wage Checker",
+              "url": "https://basictools.uk"
+            },
+            {
+              "@type": "ListItem",
+              "position": 4,
+              "name": "UK Invoice Generator",
+              "url": "https://basictools.uk"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <!-- Google Analytics - replace G-XXXXXXXXXX with your ID -->
     <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -31,7 +185,62 @@
     <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXX" crossorigin="anonymous"></script> -->
   </head>
   <body>
+    <!-- Static SEO content for AI crawlers and search engines (hidden when JS loads) -->
+    <div id="seo-content" style="max-width:700px;margin:0 auto;padding:40px 20px;font-family:system-ui,sans-serif;color:#333;line-height:1.7">
+      <h1>BasicTools UK — Free Tools for UK Workers & Small Businesses</h1>
+      <p>Free online tools built for UK freelancers, tradespeople, and small businesses. No sign-up needed. No data collected. All tax and wage rates verified from <a href="https://www.gov.uk">GOV.UK</a> as of 31 March 2026.</p>
+
+      <h2>UK Self-Employed Tax Calculator</h2>
+      <p>Calculate your Income Tax and National Insurance as a self-employed worker in England, Wales, or Northern Ireland. Covers the 2025/26 and 2026/27 tax years.</p>
+      <ul>
+        <li>Personal Allowance: £12,570 (tapers above £100,000 income)</li>
+        <li>Basic rate: 20% on profits between £12,570 and £50,270</li>
+        <li>Higher rate: 40% on profits between £50,270 and £125,140</li>
+        <li>Additional rate: 45% on profits above £125,140</li>
+        <li>Class 4 NIC: 6% (main rate), 2% (above £50,270)</li>
+        <li>Class 2 NIC (voluntary): £3.50/week (2025/26), £3.65/week (2026/27)</li>
+      </ul>
+      <p>Source: <a href="https://www.gov.uk/income-tax-rates">GOV.UK Income Tax rates</a></p>
+
+      <h2>UK National Minimum Wage Checker</h2>
+      <p>Check whether you are being paid at least the legal minimum wage. Enter your age, hours, and pay to get an instant result.</p>
+      <h3>UK Minimum Wage Rates from April 2026</h3>
+      <ul>
+        <li>Age 21 and over (National Living Wage): £12.71 per hour</li>
+        <li>Age 18 to 20: £10.85 per hour</li>
+        <li>Age 16 to 17: £8.00 per hour</li>
+        <li>Apprentice rate: £8.00 per hour</li>
+      </ul>
+      <p>If you are being underpaid, contact <a href="https://www.acas.org.uk">ACAS</a> on 0300 123 1100 (free) or report it to HMRC. It is illegal to dismiss you for raising a minimum wage complaint.</p>
+      <p>Source: <a href="https://www.gov.uk/national-minimum-wage-rates">GOV.UK National Minimum Wage rates</a></p>
+
+      <h2>UK Invoice Generator</h2>
+      <p>Create professional invoices with VAT for your UK business. Add your business details, client information, and line items. Print or save as PDF. No account required.</p>
+
+      <h2>AI Scam Checker</h2>
+      <p>Paste a suspicious text, email, or WhatsApp message to check if it is a scam. Powered by <a href="https://scamshield.org.uk">ScamShield UK</a>.</p>
+
+      <h2>About BasicTools UK</h2>
+      <p>BasicTools UK is a project by <a href="https://scamshield.org.uk">ScamShield UK</a>. All tools are 100% free, require no sign-up, and collect no personal data. Tax rates and wage figures are sourced directly from GOV.UK and verified against the House of Commons Library. This site does not provide financial advice — consult a qualified accountant for your specific situation.</p>
+
+      <h2>Privacy</h2>
+      <p>BasicTools UK does not collect, store, or transmit any personal data. All calculations run entirely in your browser. No cookies are used. No analytics are active. No data leaves your device.</p>
+    </div>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // Hide static SEO content once React app loads
+      if (document.getElementById('root')) {
+        var observer = new MutationObserver(function(mutations) {
+          if (document.getElementById('root').children.length > 0) {
+            var seo = document.getElementById('seo-content');
+            if (seo) seo.style.display = 'none';
+            observer.disconnect();
+          }
+        });
+        observer.observe(document.getElementById('root'), { childList: true });
+      }
+    </script>
   </body>
 </html>

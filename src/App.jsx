@@ -161,7 +161,7 @@ function TaxTool({ onBack }) {
         </div>
         <button onClick={handleTaxPrint} style={{ width:"100%",padding:"13px",border:"1px solid rgba(245,158,11,0.3)",borderRadius:"8px",fontSize:"14px",fontWeight:"700",cursor:"pointer",background:"rgba(245,158,11,0.08)",color:"#f59e0b",marginBottom:"14px",display:"flex",alignItems:"center",justifyContent:"center",gap:"8px" }}>🖨️ Print / Save as PDF</button>
         <div style={{ fontSize:"10px",color:"#555",lineHeight:"1.5",padding:"8px 0" }}>
-          <strong style={{ color:"#777" }}>Important:</strong> England, Wales & NI only. Does not include student loans, pensions, or dividends. Rates verified from GOV.UK & House of Commons Library, 31 Mar 2026. Not financial advice.
+          <strong style={{ color:"#777" }}>Important:</strong> England, Wales & NI only. Does not include student loans, pensions, or dividends. Rates verified from <a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener noreferrer" style={{color:"#666",textDecoration:"underline"}}>GOV.UK</a> & House of Commons Library, 31 Mar 2026. Not financial advice.
         </div>
       </>}
     </div>
@@ -551,7 +551,7 @@ function WageTool({ onBack }) {
             </table>
           </div>
           <button onClick={handleHistoryPrint} style={{ width:"100%",padding:"12px",border:"1px solid rgba(59,130,246,0.3)",borderRadius:"7px",fontSize:"13px",fontWeight:"700",cursor:"pointer",background:"rgba(59,130,246,0.08)",color:"#3b82f6",marginTop:"12px",display:"flex",alignItems:"center",justifyContent:"center",gap:"8px" }}>🖨️ Print / Save as PDF</button>
-          <div style={{fontSize:"10px",color:"#555",marginTop:"8px",lineHeight:"1.5"}}>NLW age changed: 25+ (2016–2021) → 23+ (2021–2024) → 21+ (2024 onwards). Source: GOV.UK. ACAS helpline: 0300 123 1100.</div>
+          <div style={{fontSize:"10px",color:"#555",marginTop:"8px",lineHeight:"1.5"}}>NLW age changed: 25+ (2016–2021) → 23+ (2021–2024) → 21+ (2024 onwards). Source: <a href="https://www.gov.uk/national-minimum-wage-rates" target="_blank" rel="noopener noreferrer" style={{color:"#666",textDecoration:"underline"}}>GOV.UK</a>. ACAS helpline: <a href="https://www.acas.org.uk" target="_blank" rel="noopener noreferrer" style={{color:"#666",textDecoration:"underline"}}>0300 123 1100</a>.</div>
         </div>
       )}
     </div>
@@ -691,9 +691,77 @@ export default function BasicToolsApp() {
 
       </div>
 
-      <footer style={{ borderTop:"1px solid rgba(255,255,255,0.04)",padding:"20px 28px",display:"flex",justifyContent:"space-between",alignItems:"center" }}>
-        <div style={{ fontSize:"11px",color:"#555" }}>Built by Abbas · <a href="https://scamshield.org.uk" target="_blank" rel="noopener noreferrer" style={{ color:"#f59e0b",textDecoration:"none" }}>ScamShield UK</a></div>
-        <div style={{ fontSize:"10px",color:"#444" }}>© 2026 BasicTools UK · Tax rates verified from GOV.UK</div>
+      {/* ABOUT / PRIVACY / TERMS */}
+      <div style={{ maxWidth:"680px",margin:"0 auto",padding:"0 28px 48px" }}>
+        {/* About */}
+        <div id="about" style={{ background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.06)",borderRadius:"12px",padding:"24px",marginBottom:"14px" }}>
+          <h2 style={{ fontSize:"14px",fontWeight:"700",color:"#f59e0b",marginBottom:"10px",textTransform:"uppercase",letterSpacing:"1.5px" }}>About BasicTools UK</h2>
+          <p style={{ fontSize:"13px",color:"#aaa",lineHeight:"1.7",marginBottom:"10px" }}>
+            BasicTools UK is built by Abbas, the founder of <a href="https://scamshield.org.uk" target="_blank" rel="noopener noreferrer" style={{color:"#f59e0b",textDecoration:"none"}}>ScamShield UK</a>. Every tool on this site is free to use, requires no sign-up, and collects no personal data.
+          </p>
+          <p style={{ fontSize:"13px",color:"#aaa",lineHeight:"1.7",marginBottom:"10px" }}>
+            All tax rates and wage figures are sourced directly from <a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener noreferrer" style={{color:"#3b82f6",textDecoration:"none"}}>GOV.UK</a> and verified against the House of Commons Library. Last verified: 31 March 2026.
+          </p>
+          <p style={{ fontSize:"12px",color:"#666",lineHeight:"1.6" }}>
+            This site does not provide financial, legal, or tax advice. The tools are for guidance only. For your specific situation, consult a qualified accountant or HMRC directly.
+          </p>
+        </div>
+
+        {/* Privacy Policy */}
+        <div id="privacy" style={{ background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.06)",borderRadius:"12px",padding:"24px",marginBottom:"14px" }}>
+          <h2 style={{ fontSize:"14px",fontWeight:"700",color:"#10b981",marginBottom:"10px",textTransform:"uppercase",letterSpacing:"1.5px" }}>Privacy Policy</h2>
+          <p style={{ fontSize:"12px",color:"#aaa",lineHeight:"1.7",marginBottom:"8px" }}>
+            BasicTools UK respects your privacy completely. Here is exactly what we do and do not do:
+          </p>
+          <ul style={{ fontSize:"12px",color:"#aaa",lineHeight:"1.8",paddingLeft:"18px",marginBottom:"8px" }}>
+            <li>We <strong style={{color:"#10b981"}}>do not collect</strong> any personal data whatsoever.</li>
+            <li>We <strong style={{color:"#10b981"}}>do not use cookies</strong> — no tracking cookies, no analytics cookies, nothing.</li>
+            <li>We <strong style={{color:"#10b981"}}>do not use analytics</strong> — no Google Analytics, no tracking pixels.</li>
+            <li>All calculations run <strong style={{color:"#10b981"}}>entirely in your browser</strong>. No data is sent to any server.</li>
+            <li>Your tax figures, wage details, and invoice data <strong style={{color:"#10b981"}}>never leave your device</strong>.</li>
+            <li>We do not sell, share, or transmit any information to third parties.</li>
+          </ul>
+          <p style={{ fontSize:"11px",color:"#666",lineHeight:"1.6" }}>
+            This site is hosted on Vercel. Standard server access logs (IP address, request URL, timestamp) may be retained by the hosting provider per their <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{color:"#3b82f6",textDecoration:"none"}}>privacy policy</a>. We have no access to individual user data.
+          </p>
+        </div>
+
+        {/* Terms of Use */}
+        <div id="terms" style={{ background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.06)",borderRadius:"12px",padding:"24px",marginBottom:"14px" }}>
+          <h2 style={{ fontSize:"14px",fontWeight:"700",color:"#3b82f6",marginBottom:"10px",textTransform:"uppercase",letterSpacing:"1.5px" }}>Terms of Use</h2>
+          <ul style={{ fontSize:"12px",color:"#aaa",lineHeight:"1.8",paddingLeft:"18px" }}>
+            <li>All tools on BasicTools UK are provided free of charge for personal and business use.</li>
+            <li>Tax calculations, wage checks, and invoice generation are for <strong style={{color:"#fff"}}>guidance only</strong> and do not constitute professional financial or legal advice.</li>
+            <li>While we verify all rates from GOV.UK, we cannot guarantee absolute accuracy. Always check with HMRC or a qualified professional for decisions affecting your finances.</li>
+            <li>You may use the tools and print outputs for your own records. The tools and their outputs are provided "as is" without warranty.</li>
+            <li>BasicTools UK is not affiliated with HMRC, GOV.UK, or any government body.</li>
+            <li>For tax queries, contact <a href="https://www.gov.uk/contact-hmrc" target="_blank" rel="noopener noreferrer" style={{color:"#3b82f6",textDecoration:"none"}}>HMRC</a>. For wage disputes, call <a href="https://www.acas.org.uk" target="_blank" rel="noopener noreferrer" style={{color:"#3b82f6",textDecoration:"none"}}>ACAS</a> on 0300 123 1100.</li>
+          </ul>
+        </div>
+
+        {/* Data Sources */}
+        <div style={{ background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.06)",borderRadius:"12px",padding:"24px" }}>
+          <h2 style={{ fontSize:"14px",fontWeight:"700",color:"#888",marginBottom:"10px",textTransform:"uppercase",letterSpacing:"1.5px" }}>Data Sources</h2>
+          <ul style={{ fontSize:"12px",color:"#aaa",lineHeight:"1.8",paddingLeft:"18px" }}>
+            <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener noreferrer" style={{color:"#3b82f6",textDecoration:"none"}}>GOV.UK — Income Tax rates and thresholds</a></li>
+            <li><a href="https://www.gov.uk/national-minimum-wage-rates" target="_blank" rel="noopener noreferrer" style={{color:"#3b82f6",textDecoration:"none"}}>GOV.UK — National Minimum Wage rates</a></li>
+            <li><a href="https://www.gov.uk/self-employed-national-insurance-rates" target="_blank" rel="noopener noreferrer" style={{color:"#3b82f6",textDecoration:"none"}}>GOV.UK — Self-employed National Insurance rates</a></li>
+            <li><a href="https://commonslibrary.parliament.uk" target="_blank" rel="noopener noreferrer" style={{color:"#3b82f6",textDecoration:"none"}}>House of Commons Library</a></li>
+          </ul>
+          <p style={{ fontSize:"11px",color:"#555",marginTop:"8px" }}>All rates last verified: 31 March 2026. Updated annually when GOV.UK publishes new rates.</p>
+        </div>
+      </div>
+
+      <footer style={{ borderTop:"1px solid rgba(255,255,255,0.04)",padding:"20px 28px" }}>
+        <div style={{ maxWidth:"680px",margin:"0 auto",display:"flex",flexDirection:"column",gap:"8px",alignItems:"center" }}>
+          <div style={{ fontSize:"11px",color:"#555" }}>Built by Abbas · <a href="https://scamshield.org.uk" target="_blank" rel="noopener noreferrer" style={{ color:"#f59e0b",textDecoration:"none" }}>ScamShield UK</a></div>
+          <div style={{ fontSize:"10px",color:"#444" }}>© 2026 BasicTools UK · Tax rates verified from <a href="https://www.gov.uk" target="_blank" rel="noopener noreferrer" style={{color:"#444",textDecoration:"underline"}}>GOV.UK</a></div>
+          <div style={{ display:"flex",gap:"16px",fontSize:"10px" }}>
+            <a href="#about" style={{color:"#555",textDecoration:"none"}}>About</a>
+            <a href="#privacy" style={{color:"#555",textDecoration:"none"}}>Privacy</a>
+            <a href="#terms" style={{color:"#555",textDecoration:"none"}}>Terms</a>
+          </div>
+        </div>
       </footer>
     </div>
   );
