@@ -1,4 +1,5 @@
-import { useState, useRef } from "react";
+import { useState, useRef, lazy, Suspense } from "react";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 
 /* ═══════════════════════════════════════════════
    BASICTOOLS UK — Landing Page
@@ -561,36 +562,51 @@ function WageTool({ onBack }) {
 /* ═══════════════════════════════════════════════
    MAIN APP
    ═══════════════════════════════════════════════ */
+const PriceView = lazy(() => import('./priceview/PriceView.jsx'));
+
 const TOOLS = [
   { id:"scam", name:"Scam Checker", desc:"Paste a suspicious text, email or WhatsApp message. AI tells you instantly if it's a scam.", icon:"🛡️", status:"live", color:"#ef4444", link:"https://scamshield.org.uk" },
   { id:"tax", name:"Tax Calculator", desc:"Enter your income and expenses. See exactly what you owe HMRC — Income Tax + NIC, penny-accurate.", icon:"🧮", status:"live", color:"#10b981" },
   { id:"wages", name:"National Wage Checker", desc:"Check if you're being paid correctly, see your April 2026 wage increase, and view all UK rates since 2018.", icon:"💷", status:"live", color:"#3b82f6" },
   { id:"invoice", name:"Invoice Generator", desc:"Create professional UK invoices with VAT. Print or save as PDF. No sign-up.", icon:"📄", status:"live", color:"#f59e0b" },
+  { id:"priceview", name:"PriceView", desc:"See what any UK property sold for. Search by postcode, browse on a map.", icon:"\ud83c\udfe0", status:"live", color:"#C9A962" },
 ];
 
 export default function BasicToolsApp() {
-  const [active, setActive] = useState(null);
-  const [hovered, setHovered] = useState(null);
-
   const bg = { minHeight:"100vh",background:"linear-gradient(160deg,#0a0a14 0%,#12121f 40%,#0f1729 100%)",fontFamily:"'DM Sans',sans-serif",color:"#e0e0e0" };
+  const navigate = useNavigate();
 
-  if (active === "tax") return (
-    <div style={bg}><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-      <div style={{ maxWidth:"640px",margin:"0 auto",padding:"24px 20px" }}><TaxTool onBack={()=>setActive(null)} /></div>
-    </div>
+  return (
+    <Routes>
+      <Route path="/tax" element={
+        <div style={bg}><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+          <div style={{ maxWidth:"640px",margin:"0 auto",padding:"24px 20px" }}><TaxTool onBack={()=>navigate('/')} /></div>
+        </div>
+      } />
+      <Route path="/invoice" element={
+        <div style={bg}><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+          <div style={{ maxWidth:"860px",margin:"0 auto",padding:"24px 20px" }}><InvoiceTool onBack={()=>navigate('/')} /></div>
+        </div>
+      } />
+      <Route path="/wages" element={
+        <div style={bg}><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+          <div style={{ maxWidth:"640px",margin:"0 auto",padding:"24px 20px" }}><WageTool onBack={()=>navigate('/')} /></div>
+        </div>
+      } />
+      <Route path="/priceview/*" element={
+        <Suspense fallback={<div style={{...bg,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{color:"#C9A962",fontSize:"14px"}}>Loading PriceView...</span></div>}>
+          <PriceView onBack={()=>navigate('/')} />
+        </Suspense>
+      } />
+      <Route path="/" element={<Landing navigate={navigate} />} />
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
   );
+}
 
-  if (active === "invoice") return (
-    <div style={bg}><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-      <div style={{ maxWidth:"860px",margin:"0 auto",padding:"24px 20px" }}><InvoiceTool onBack={()=>setActive(null)} /></div>
-    </div>
-  );
-
-  if (active === "wages") return (
-    <div style={bg}><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-      <div style={{ maxWidth:"640px",margin:"0 auto",padding:"24px 20px" }}><WageTool onBack={()=>setActive(null)} /></div>
-    </div>
-  );
+function Landing({ navigate }) {
+  const [hovered, setHovered] = useState(null);
+  const bg = { minHeight:"100vh",background:"linear-gradient(160deg,#0a0a14 0%,#12121f 40%,#0f1729 100%)",fontFamily:"'DM Sans',sans-serif",color:"#e0e0e0" };
 
   return (
     <div style={bg}>
@@ -625,7 +641,7 @@ export default function BasicToolsApp() {
             const h = hovered===tool.id;
             return (
               <div key={tool.id} onMouseEnter={()=>setHovered(tool.id)} onMouseLeave={()=>setHovered(null)}
-                onClick={()=>{ if(tool.link){window.open(tool.link,"_blank");return;} if(live)setActive(tool.id); }}
+                onClick={()=>{ if(tool.link){window.open(tool.link,"_blank");return;} if(live)navigate('/'+tool.id); }}
                 style={{ background:h&&live?"rgba(255,255,255,0.05)":"rgba(255,255,255,0.02)",border:`1px solid ${h&&live?tool.color+"44":"rgba(255,255,255,0.06)"}`,borderRadius:"12px",padding:"22px",cursor:live?"pointer":"default",transition:"all 0.2s",position:"relative",opacity:live?1:0.45 }}>
                 {live&&<div style={{ position:"absolute",top:"11px",right:"11px",fontSize:"9px",textTransform:"uppercase",letterSpacing:"1px",color:tool.color,fontWeight:"700",background:tool.color+"15",padding:"2px 7px",borderRadius:"4px" }}>● Live</div>}
                 {!live&&<div style={{ position:"absolute",top:"11px",right:"11px",fontSize:"9px",textTransform:"uppercase",letterSpacing:"1px",color:"#555",fontWeight:"600",background:"rgba(255,255,255,0.03)",padding:"2px 7px",borderRadius:"4px" }}>Soon</div>}
