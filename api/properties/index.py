@@ -47,7 +47,11 @@ class handler(BaseHTTPRequestHandler):
             debug_info["location_error"] = f"{type(e).__name__}: {e}"
 
         try:
-            properties = fetch_transactions_by_postcode(cleaned)
+            if debug:
+                properties, sparql_debug = fetch_transactions_by_postcode(cleaned, return_debug=True)
+                debug_info["sparql"] = sparql_debug
+            else:
+                properties = fetch_transactions_by_postcode(cleaned)
             debug_info["properties_ok"] = True
         except Exception as e:
             properties = []

@@ -39,11 +39,13 @@ def _build_sparql_query(postcode: str) -> str:
     """
 
 
-def fetch_transactions_by_postcode(postcode: str) -> list:
+def fetch_transactions_by_postcode(postcode: str, return_debug: bool = False):
     """Fetch Land Registry sales data for a UK postcode (synchronous, stdlib-only)."""
     query = _build_sparql_query(postcode)
     url = "https://landregistry.data.gov.uk/landregistry/query"
     form_data = urllib.parse.urlencode({"query": query}).encode("utf-8")
+
+    debug = {"url": url, "postcode_formatted": postcode[:-3] + " " + postcode[-3:] if len(postcode) > 3 else postcode}
 
     try:
         req = urllib.request.Request(
@@ -56,9 +58,18 @@ def fetch_transactions_by_postcode(postcode: str) -> list:
             },
         )
         with urllib.request.urlopen(req, timeout=25) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-    except Exception:
+            raw = resp.read().decode("utf-8")
+            debug["http_status"] = resp.status
+            debug["response_len"] = len(raw)
+            debug["response_sample"] = raw[:500]
+            data = json.loads(raw)
+    except Exception as e:
+        debug["fetch_error"] = f"{type(e).__name__}: {e}"
+        if return_debug:
+            return [], debug
         return []
+
+    debug["bindings_count"] = len(data.get("results", {}).get("bindings", []))
 
     bindings = data.get("results", {}).get("bindings", [])
     properties = []
@@ -109,4 +120,6 @@ def fetch_transactions_by_postcode(postcode: str) -> list:
             "new_build": False,
         })
 
+    if return_debug:
+        return properties, debug
     return properties
