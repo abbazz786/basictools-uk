@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import useGeolocation from "../hooks/useGeolocation.js";
 import PropertyList from "./PropertyList.jsx";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL ?? "";
 
 export default function NearMe({ onSelect }) {
   const geo = useGeolocation();
@@ -28,7 +28,7 @@ export default function NearMe({ onSelect }) {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 15000);
         const res = await fetch(
-          `${API_URL}/api/v1/properties/nearby?lat=${geo.latitude}&lng=${geo.longitude}&radius=500`,
+          `${API_URL}/api/properties/nearby?lat=${geo.latitude}&lng=${geo.longitude}&radius=500`,
           { signal: controller.signal }
         );
         clearTimeout(timeoutId);

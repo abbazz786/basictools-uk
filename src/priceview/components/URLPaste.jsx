@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL ?? "";
 
 const URL_PATTERNS = [
   /rightmove\.co\.uk/i,
@@ -35,7 +35,7 @@ export default function URLPaste({ onResult, onClose }) {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 20000);
 
-      const res = await fetch(`${API_URL}/api/v1/listings/analyze`, {
+      const res = await fetch(`${API_URL}/api/listings/analyze`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: url.trim() }),

@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL ?? "";
 
 export default function usePropertySearch() {
   const [results, setResults] = useState([]);
@@ -24,7 +24,7 @@ export default function usePropertySearch() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000);
       const res = await fetch(
-        `${API_URL}/api/v1/properties?postcode=${encodeURIComponent(cleaned)}`,
+        `${API_URL}/api/properties?postcode=${encodeURIComponent(cleaned)}`,
         { signal: controller.signal }
       );
       clearTimeout(timeoutId);

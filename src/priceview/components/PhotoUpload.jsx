@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL ?? "";
 
 export default function PhotoUpload({ onResult, onClose }) {
   const [preview, setPreview] = useState(null);
@@ -39,7 +39,7 @@ export default function PhotoUpload({ onResult, onClose }) {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 20000);
 
-      const res = await fetch(`${API_URL}/api/v1/photo/identify`, {
+      const res = await fetch(`${API_URL}/api/photo/identify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ photo: base64 }),

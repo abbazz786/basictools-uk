@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL ?? "";
 
 export default function AddressSearch({ onResult, onError }) {
   const [query, setQuery] = useState("");
@@ -38,7 +38,7 @@ export default function AddressSearch({ onResult, onError }) {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 8000);
         const res = await fetch(
-          `${API_URL}/api/v1/search/address`,
+          `${API_URL}/api/search/address`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

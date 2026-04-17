@@ -4,7 +4,7 @@ import useGeolocation from "../hooks/useGeolocation.js";
 import useDeviceOrientation from "../hooks/useDeviceOrientation.js";
 import ARPropertyCard from "./ARPropertyCard.jsx";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL ?? "";
 const FOV = 60; // Field of view in degrees
 
 /**
@@ -87,7 +87,7 @@ export default function ARView({ onSelectProperty, onBack }) {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000);
         const res = await fetch(
-          `${API_URL}/api/v1/properties/nearby?lat=${geo.latitude}&lng=${geo.longitude}&radius=200`,
+          `${API_URL}/api/properties/nearby?lat=${geo.latitude}&lng=${geo.longitude}&radius=200`,
           { signal: controller.signal }
         );
         clearTimeout(timeoutId);
