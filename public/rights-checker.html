@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UK Rights Checker — Know What You're Owed | BasicTools UK</title>
+<meta name="description" content="Free UK employment rights calculator. Holiday entitlement, statutory sick pay, notice period and redundancy pay. Updated for April 2026. Grounded in UK law, not AI guesswork.">
+<meta name="theme-color" content="#F4EFE6">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800;9..144,900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F4EFE6;
+    --paper-2: #EDE6D9;
+    --ink: #14110D;
+    --ink-muted: #5B5248;
+    --oxblood: #B8392E;
+    --oxblood-dark: #8F2A22;
+    --forest: #3E5F3E;
+    --line: rgba(20, 17, 13, 0.14);
+    --line-soft: rgba(20, 17, 13, 0.07);
+    --soft: rgba(20, 17, 13, 0.035);
+    --alert: #C96F2E;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.55;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(ellipse at top left, rgba(184, 57, 46, 0.04), transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(62, 95, 62, 0.04), transparent 50%);
+    min-height: 100vh;
+  }
+  .frame {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  /* ===== HEADER ===== */
+  .masthead {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--ink);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .masthead a {
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .masthead a:hover { color: var(--oxblood); }
+  .updated { color: var(--ink-muted); }
+  .updated span { color: var(--oxblood); font-weight: 600; }
+
+  header.hero {
+    padding: 56px 0 40px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 40px;
+  }
+  h1.title {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: clamp(48px, 9vw, 108px);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    margin-bottom: 24px;
+  }
+  h1.title em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--oxblood);
+    font-variation-settings: 'opsz' 144;
+  }
+  .lede {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(18px, 2.2vw, 24px);
+    line-height: 1.4;
+    max-width: 680px;
+    color: var(--ink-muted);
+    font-weight: 400;
+  }
+  .lede strong { color: var(--ink); font-weight: 600; }
+  .meta-row {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    margin-top: 32px;
+  }
+  .badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    color: var(--ink-muted);
+    background: var(--soft);
+  }
+  .badge.alert {
+    border-color: var(--oxblood);
+    color: var(--oxblood);
+    background: rgba(184, 57, 46, 0.06);
+  }
+
+  /* ===== TABS ===== */
+  nav.tabs {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    overflow: hidden;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+  .tab {
+    flex: 1;
+    min-width: 140px;
+    background: transparent;
+    border: none;
+    border-right: 1px solid var(--ink);
+    padding: 18px 20px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink);
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s, color 0.15s;
+    position: relative;
+  }
+  .tab:last-child { border-right: none; }
+  .tab .tab-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-muted);
+    display: block;
+    margin-bottom: 4px;
+    letter-spacing: 0.05em;
+  }
+  .tab:hover { background: var(--soft); }
+  .tab.active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .tab.active .tab-num { color: rgba(244, 239, 230, 0.5); }
+
+  /* ===== CALCULATOR CARD ===== */
+  .calc {
+    display: none;
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .calc.active { display: grid; }
+  @media (min-width: 880px) {
+    .calc.active { grid-template-columns: 1fr 1.1fr; gap: 48px; }
+  }
+
+  .form-panel {
+    background: var(--paper-2);
+    border: 1px solid var(--ink);
+    padding: 32px;
+  }
+  .form-panel h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .form-panel .sub {
+    color: var(--ink-muted);
+    font-size: 15px;
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  .field {
+    margin-bottom: 20px;
+  }
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+  .field .hint {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-top: 6px;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  input, select {
+    width: 100%;
+    padding: 14px 16px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 16px;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 0;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  input:focus, select:focus {
+    outline: none;
+    box-shadow: 2px 2px 0 var(--ink);
+    transform: translate(-2px, -2px);
+  }
+  .prefix-group {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--ink);
+  }
+  .prefix-group .prefix {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 16px;
+  }
+  .prefix-group input { border: none; }
+  .prefix-group input:focus { transform: none; box-shadow: none; }
+
+  button.calc-btn {
+    width: 100%;
+    padding: 18px;
+    background: var(--oxblood);
+    color: var(--paper);
+    border: 1px solid var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: transform 0.1s, box-shadow 0.1s, background 0.15s;
+  }
+  button.calc-btn:hover {
+    background: var(--oxblood-dark);
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  button.calc-btn:active { transform: translate(0, 0); box-shadow: none; }
+
+  /* ===== RESULT PANEL ===== */
+  .result-panel {
+    background: var(--paper);
+    position: relative;
+  }
+  .result-card {
+    border: 1px solid var(--ink);
+    padding: 36px 32px;
+    background: var(--paper);
+    position: relative;
+    min-height: 400px;
+  }
+  .result-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ink-muted);
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-style: italic;
+    min-height: 340px;
+  }
+  .result-placeholder::before {
+    content: '§';
+    font-family: 'Fraunces', serif;
+    font-size: 64px;
+    opacity: 0.2;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .result-content { display: none; }
+  .result-content.show { display: block; animation: fadeIn 0.4s ease-out; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--oxblood);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .eyebrow::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--oxblood);
+    opacity: 0.3;
+  }
+  .big-number {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: clamp(56px, 10vw, 96px);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    margin-bottom: 8px;
+    font-variation-settings: 'opsz' 144;
+  }
+  .big-number .unit {
+    font-size: 0.35em;
+    color: var(--ink-muted);
+    font-weight: 400;
+    font-style: italic;
+    margin-left: 8px;
+    font-variation-settings: 'opsz' 9;
+  }
+  .big-subtitle {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    line-height: 1.3;
+    color: var(--ink);
+    margin-bottom: 32px;
+    font-weight: 400;
+  }
+
+  .breakdown {
+    border-top: 1px solid var(--line);
+    padding-top: 24px;
+    margin-bottom: 24px;
+  }
+  .breakdown h3 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 16px;
+  }
+  .breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--line-soft);
+    font-size: 14px;
+  }
+  .breakdown-row:last-child { border-bottom: none; }
+  .breakdown-row .label { color: var(--ink-muted); }
+  .breakdown-row .value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .breakdown-row.total {
+    border-top: 1px solid var(--ink);
+    border-bottom: none;
+    padding-top: 14px;
+    margin-top: 8px;
+    font-weight: 600;
+  }
+  .breakdown-row.total .label { color: var(--ink); }
+
+  .law-box {
+    background: var(--soft);
+    border-left: 3px solid var(--ink);
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .law-box strong { font-weight: 600; }
+  .law-box .source {
+    display: block;
+    margin-top: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.03em;
+  }
+  .law-box .source a {
+    color: var(--oxblood);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--oxblood);
+  }
+
+  .action-box {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 22px;
+    margin-top: 20px;
+  }
+  .action-box h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .action-box p { font-size: 14px; opacity: 0.85; line-height: 1.5; margin-bottom: 12px; }
+  .action-box p:last-child { margin-bottom: 0; }
+  .action-box a { color: var(--paper); font-weight: 600; border-bottom: 1px solid rgba(244,239,230,0.4); text-decoration: none; }
+  .action-box a:hover { border-bottom-color: var(--paper); }
+
+  .warning {
+    background: rgba(201, 111, 46, 0.1);
+    border: 1px solid var(--alert);
+    padding: 16px 20px;
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .warning strong { color: var(--alert); }
+
+  /* ===== FOOTER ===== */
+  footer.site-footer {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--ink);
+    font-size: 13px;
+    color: var(--ink-muted);
+    display: grid;
+    gap: 20px;
+  }
+  @media (min-width: 720px) {
+    footer.site-footer { grid-template-columns: 1fr 1fr; gap: 40px; }
+  }
+  footer h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  footer a { color: var(--oxblood); text-decoration: none; border-bottom: 1px dotted var(--oxblood); }
+  footer ul { list-style: none; }
+  footer li { padding: 4px 0; }
+  .disclaimer { font-style: italic; margin-top: 16px; padding: 16px; background: var(--soft); border-left: 3px solid var(--oxblood); }
+
+  /* Mobile tweaks */
+  @media (max-width: 600px) {
+    .frame { padding: 20px 16px 60px; }
+    .form-panel, .result-card { padding: 24px 20px; }
+    .tab { min-width: 50%; border-bottom: 1px solid var(--ink); }
+    .tab:nth-child(-n+2) { border-bottom: 1px solid var(--ink); }
+    .tab:nth-last-child(-n+2) { border-bottom: none; }
+    .tab:nth-child(2n) { border-right: none; }
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+
+  <!-- ===== MASTHEAD ===== -->
+  <div class="masthead">
+    <a href="https://basictools.uk">← BasicTools.UK</a>
+    <div class="updated">Updated <span>6 Apr 2026</span></div>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <header class="hero">
+    <h1 class="title">UK&nbsp;Rights<br><em>Checker.</em></h1>
+    <p class="lede">Know exactly what you're owed. <strong>Holiday, sick pay, notice and redundancy</strong> — calculated from real UK law, not an AI guess that'll get you in trouble.</p>
+    <div class="meta-row">
+      <span class="badge">April 2026 rates</span>
+      <span class="badge">Gov.uk + ACAS sourced</span>
+      <span class="badge alert">Not legal advice</span>
+    </div>
+  </header>
+
+  <!-- ===== TABS ===== -->
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="holiday" role="tab"><span class="tab-num">01</span>Holiday</button>
+    <button class="tab" data-tab="ssp" role="tab"><span class="tab-num">02</span>Sick Pay</button>
+    <button class="tab" data-tab="notice" role="tab"><span class="tab-num">03</span>Notice</button>
+    <button class="tab" data-tab="redundancy" role="tab"><span class="tab-num">04</span>Redundancy</button>
+  </nav>
+
+  <main>
+
+    <!-- ========== HOLIDAY ========== -->
+    <section class="calc active" data-calc="holiday">
+      <div class="form-panel">
+        <h2>Holiday entitlement</h2>
+        <p class="sub">Every worker — full-time, part-time, zero-hours or agency — gets a minimum of <strong>5.6 weeks</strong> paid holiday per year.</p>
+
+        <div class="field">
+          <label for="h-days">Days you work per week</label>
+          <input type="number" id="h-days" min="0.5" max="7" step="0.5" value="5" placeholder="e.g. 5">
+          <div class="hint">Use half-days if your week varies (e.g. 4.5).</div>
+        </div>
+
+        <div class="field">
+          <label for="h-include-bh">Does your holiday include bank holidays?</label>
+          <select id="h-include-bh">
+            <option value="yes">Yes — bank holidays count towards my 28 days</option>
+            <option value="no">No — bank holidays are extra</option>
+            <option value="unsure">Not sure — check my contract</option>
+          </select>
+          <div class="hint">UK has 8 bank holidays in England &amp; Wales. Your contract decides this.</div>
+        </div>
+
+        <button class="calc-btn" onclick="calcHoliday()">Calculate entitlement</button>
+      </div>
+
+      <div class="result-panel">
+        <div class="result-card" id="h-result">
+          <div class="result-placeholder">Fill in the form and I'll tell you your minimum legal holiday.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SSP ========== -->
+    <section class="calc" data-calc="ssp">
+      <div class="form-panel">
+        <h2>Statutory Sick Pay</h2>
+        <p class="sub">Big changes from <strong>6 April 2026</strong>: paid from <strong>day one</strong>, no earnings threshold, and the new <strong>80% rule</strong>. If you're an employee, you qualify.</p>
+
+        <div class="field">
+          <label for="s-awe">Your average weekly earnings (gross, before tax)</label>
+          <div class="prefix-group">
+            <span class="prefix">£</span>
+            <input type="number" id="s-awe" min="0" step="1" placeholder="e.g. 450">
+          </div>
+          <div class="hint">Your usual weekly pay before sickness. Use an average of the last 8 weeks.</div>
+        </div>
+
+        <div class="field">
+          <label for="s-days-week">Days you normally work per week</label>
+          <input type="number" id="s-days-week" min="1" max="7" step="0.5" value="5">
+        </div>
+
+        <div class="field">
+          <label for="s-days-off">How many working days have you been off?</label>
+          <input type="number" id="s-days-off" min="0" step="1" value="0">
+          <div class="hint">Leave at 0 to just see your daily rate. SSP runs for up to 28 weeks.</div>
+        </div>
+
+        <button class="calc-btn" onclick="calcSSP()">Calculate SSP</button>
+      </div>
+
+      <div class="result-panel">
+        <div class="result-card" id="s-result">
+          <div class="result-placeholder">Enter your weekly earnings to see your SSP under the new rules.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== NOTICE ========== -->
+    <section class="calc" data-calc="notice">
+      <div class="form-panel">
+        <h2>Notice period</h2>
+        <p class="sub">The <strong>minimum</strong> notice your employer must give you — by law. Your contract can say more, never less.</p>
+
+        <div class="field">
+          <label for="n-years">Complete years you've been employed</label>
+          <input type="number" id="n-years" min="0" max="50" step="1" value="3">
+          <div class="hint">Count only full years. If you've worked 3 years and 10 months, enter 3.</div>
+        </div>
+
+        <div class="field">
+          <label for="n-months">Or months (if under 1 year)</label>
+          <input type="number" id="n-months" min="0" max="11" step="1" value="0">
+          <div class="hint">Only fill this in if "years" is 0.</div>
+        </div>
+
+        <div class="field">
+          <label for="n-contract">Does your contract state a notice period longer than the statutory minimum?</label>
+          <select id="n-contract">
+            <option value="no">No / not sure</option>
+            <option value="yes">Yes — it says a specific notice</option>
+          </select>
+        </div>
+
+        <div class="field" id="n-contract-weeks-field" style="display:none;">
+          <label for="n-contract-weeks">Contractual notice (in weeks)</label>
+          <input type="number" id="n-contract-weeks" min="0" max="52" step="1" value="4">
+        </div>
+
+        <button class="calc-btn" onclick="calcNotice()">Calculate my notice</button>
+      </div>
+
+      <div class="result-panel">
+        <div class="result-card" id="n-result">
+          <div class="result-placeholder">Enter your length of service for your statutory notice period.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== REDUNDANCY ========== -->
+    <section class="calc" data-calc="redundancy">
+      <div class="form-panel">
+        <h2>Redundancy pay</h2>
+        <p class="sub">If you have <strong>2+ years</strong> of continuous service and are genuinely being made redundant, you're owed statutory redundancy pay. Tax-free up to £30,000.</p>
+
+        <div class="field">
+          <label for="r-age">Your age at the date of redundancy</label>
+          <input type="number" id="r-age" min="16" max="100" step="1" value="35">
+        </div>
+
+        <div class="field">
+          <label for="r-years">Complete years of service (max 20 counts)</label>
+          <input type="number" id="r-years" min="0" max="50" step="1" value="5">
+          <div class="hint">Service beyond 20 years doesn't increase your statutory redundancy.</div>
+        </div>
+
+        <div class="field">
+          <label for="r-weekly">Gross weekly pay (before tax)</label>
+          <div class="prefix-group">
+            <span class="prefix">£</span>
+            <input type="number" id="r-weekly" min="0" step="1" placeholder="e.g. 550">
+          </div>
+          <div class="hint">Capped at £751/week for statutory calculation (April 2026 rate).</div>
+        </div>
+
+        <button class="calc-btn" onclick="calcRedundancy()">Calculate redundancy pay</button>
+      </div>
+
+      <div class="result-panel">
+        <div class="result-card" id="r-result">
+          <div class="result-placeholder">Enter your details to see your statutory redundancy entitlement.</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <div>
+      <h4>Sources</h4>
+      <ul>
+        <li><a href="https://www.gov.uk/calculate-your-holiday-entitlement" target="_blank" rel="noopener">gov.uk — Holiday entitlement</a></li>
+        <li><a href="https://www.gov.uk/statutory-sick-pay" target="_blank" rel="noopener">gov.uk — Statutory Sick Pay</a></li>
+        <li><a href="https://www.gov.uk/notice-periods" target="_blank" rel="noopener">gov.uk — Notice periods</a></li>
+        <li><a href="https://www.gov.uk/calculate-your-redundancy-pay" target="_blank" rel="noopener">gov.uk — Redundancy pay</a></li>
+        <li><a href="https://www.acas.org.uk" target="_blank" rel="noopener">ACAS — Workplace advice</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>If you're being short-changed</h4>
+      <p>Start with a polite email to HR or your manager quoting the exact entitlement. If ignored, contact <a href="https://www.acas.org.uk/contact" target="_blank" rel="noopener">ACAS (0300 123 1100)</a> — it's free and confidential. You have <strong>3 months minus one day</strong> from the issue to start an Employment Tribunal claim.</p>
+      <div class="disclaimer">This tool gives statutory minimums only. It is not legal advice. Your contract, union agreement or specific circumstances may change what you're owed. For anything serious, get ACAS or a solicitor involved.</div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+// ===================================================================
+// UK RIGHTS CHECKER — RULES ENGINE
+// All rates verified for April 2026 from gov.uk, ACAS, legislation.gov.uk
+// Last verified: April 2026
+// ===================================================================
+
+const RATES_2026 = {
+  ssp: {
+    weeklyFlat: 123.25,           // £123.25/wk from 6 Apr 2026
+    percentAWE: 0.80,              // 80% AWE rule (new)
+    maxWeeks: 28,
+    waitingDays: 0                 // Removed from 6 Apr 2026
+  },
+  redundancy: {
+    weeklyCap: 751,                // £751/wk from 6 Apr 2026
+    maxYears: 20,
+    maxTotal: 22530,               // 20 × 1.5 × £751
+    minServiceYears: 2,
+    taxFreeCap: 30000
+  },
+  holiday: {
+    weeksPerYear: 5.6,
+    maxDaysCap: 28
+  },
+  nmw: {                           // For reference
+    age21plus: 12.71,
+    age18to20: 10.85,
+    under18: 8.00,
+    apprentice: 8.00
+  }
+};
+
+// ===================================================================
+// TAB SWITCHING
+// ===================================================================
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.calc').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelector(`.calc[data-calc="${tab.dataset.tab}"]`).classList.add('active');
+  });
+});
+
+// Show contract weeks field when "yes" is selected
+document.getElementById('n-contract').addEventListener('change', function() {
+  document.getElementById('n-contract-weeks-field').style.display =
+    this.value === 'yes' ? 'block' : 'none';
+});
+
+// ===================================================================
+// HELPERS
+// ===================================================================
+function money(n) {
+  return '£' + n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function moneyWhole(n) {
+  return '£' + Math.round(n).toLocaleString('en-GB');
+}
+function pluralise(n, s) { return n + ' ' + s + (n === 1 ? '' : 's'); }
+
+function renderResult(elId, html) {
+  const el = document.getElementById(elId);
+  el.innerHTML = '<div class="result-content show">' + html + '</div>';
+}
+
+// ===================================================================
+// 1. HOLIDAY
+// ===================================================================
+function calcHoliday() {
+  const days = parseFloat(document.getElementById('h-days').value);
+  const includeBH = document.getElementById('h-include-bh').value;
+
+  if (!days || days <= 0 || days > 7) {
+    alert('Please enter a valid number of working days (0.5 to 7).');
+    return;
+  }
+
+  const rawDays = RATES_2026.holiday.weeksPerYear * days;
+  const cappedDays = Math.min(rawDays, RATES_2026.holiday.maxDaysCap);
+  const capped = rawDays > RATES_2026.holiday.maxDaysCap;
+
+  let bhNote = '';
+  if (includeBH === 'yes') {
+    bhNote = `<div class="warning"><strong>Bank holidays included:</strong> if your ${cappedDays.toFixed(1)} days covers bank holidays, you effectively have around ${Math.max(0, cappedDays - 8).toFixed(1)} days of personal holiday (after 8 UK bank holidays).</div>`;
+  } else if (includeBH === 'no') {
+    bhNote = `<div class="warning" style="background: rgba(62, 95, 62, 0.08); border-color: var(--forest);"><strong style="color: var(--forest);">Bank holidays on top:</strong> you get ${cappedDays.toFixed(1)} days of personal holiday <em>plus</em> up to 8 bank holidays — so roughly ${(cappedDays + 8).toFixed(1)} days off in total.</div>`;
+  }
+
+  const html = `
+    <div class="eyebrow">01 · Holiday entitlement</div>
+    <div class="big-number">${cappedDays.toFixed(1)}<span class="unit">days / year</span></div>
+    <div class="big-subtitle">That's your statutory minimum paid holiday, working ${days} day${days === 1 ? '' : 's'} a week.</div>
+
+    <div class="breakdown">
+      <h3>How it's calculated</h3>
+      <div class="breakdown-row"><span class="label">Statutory weeks per year</span><span class="value">5.6 weeks</span></div>
+      <div class="breakdown-row"><span class="label">Days you work per week</span><span class="value">${days}</span></div>
+      <div class="breakdown-row"><span class="label">5.6 × ${days} =</span><span class="value">${rawDays.toFixed(2)} days</span></div>
+      ${capped ? `<div class="breakdown-row"><span class="label">Statutory cap</span><span class="value">28 days max</span></div>` : ''}
+      <div class="breakdown-row total"><span class="label">Your entitlement</span><span class="value">${cappedDays.toFixed(1)} days</span></div>
+    </div>
+
+    ${bhNote}
+
+    <div class="law-box">
+      <strong>The law:</strong> Working Time Regulations 1998, reg 13 &amp; 13A. All workers get 5.6 weeks paid holiday per year, capped at 28 days. This includes zero-hours, agency and part-time staff (pro-rata). You build up holiday from day one.
+      <span class="source">gov.uk/holiday-entitlement-rights · <a href="https://www.legislation.gov.uk/uksi/1998/1833" target="_blank" rel="noopener">Working Time Regulations 1998</a></span>
+    </div>
+
+    <div class="action-box">
+      <h4>If you're not getting this</h4>
+      <p>Email your employer in writing and quote "Working Time Regulations 1998, Regulation 13" plus the figure above. If they refuse, contact ACAS — free and confidential.</p>
+      <p><a href="https://www.acas.org.uk/contact" target="_blank" rel="noopener">ACAS helpline: 0300 123 1100 →</a></p>
+    </div>
+  `;
+  renderResult('h-result', html);
+}
+
+// ===================================================================
+// 2. STATUTORY SICK PAY
+// ===================================================================
+function calcSSP() {
+  const awe = parseFloat(document.getElementById('s-awe').value);
+  const daysPerWeek = parseFloat(document.getElementById('s-days-week').value);
+  const daysOff = parseInt(document.getElementById('s-days-off').value) || 0;
+
+  if (!awe || awe <= 0) { alert('Please enter your average weekly earnings.'); return; }
+  if (!daysPerWeek || daysPerWeek <= 0) { alert('Please enter your normal days per week.'); return; }
+
+  const eightyPercent = awe * RATES_2026.ssp.percentAWE;
+  const weeklySSP = Math.min(eightyPercent, RATES_2026.ssp.weeklyFlat);
+  const dailySSP = weeklySSP / daysPerWeek;
+
+  const maxDays = RATES_2026.ssp.maxWeeks * daysPerWeek;
+  const payableDays = Math.min(daysOff, maxDays);
+  const total = payableDays * dailySSP;
+
+  const cappedByFlat = eightyPercent > RATES_2026.ssp.weeklyFlat;
+
+  let limitNote = '';
+  if (daysOff > maxDays) {
+    limitNote = `<div class="warning"><strong>Heads up:</strong> SSP only runs for ${RATES_2026.ssp.maxWeeks} weeks (${maxDays} working days for you). After that, you'd need to look at ESA or contractual sick pay.</div>`;
+  }
+
+  const html = `
+    <div class="eyebrow">02 · Statutory Sick Pay</div>
+    <div class="big-number">${money(weeklySSP)}<span class="unit">per week</span></div>
+    <div class="big-subtitle">${cappedByFlat
+      ? `You hit the <strong>£${RATES_2026.ssp.weeklyFlat.toFixed(2)}</strong> statutory cap. 80% of your earnings would've been higher (${money(eightyPercent)}).`
+      : `That's 80% of your ${money(awe)} average weekly earnings — which is less than the £${RATES_2026.ssp.weeklyFlat.toFixed(2)} cap, so 80% is what applies.`}</div>
+
+    <div class="breakdown">
+      <h3>Daily rate &amp; total</h3>
+      <div class="breakdown-row"><span class="label">Weekly SSP</span><span class="value">${money(weeklySSP)}</span></div>
+      <div class="breakdown-row"><span class="label">÷ ${daysPerWeek} working days</span><span class="value">${money(dailySSP)}/day</span></div>
+      ${daysOff > 0 ? `
+        <div class="breakdown-row"><span class="label">Days off</span><span class="value">${payableDays}${daysOff > payableDays ? ` (capped from ${daysOff})` : ''}</span></div>
+        <div class="breakdown-row total"><span class="label">Total SSP owed</span><span class="value">${money(total)}</span></div>
+      ` : ''}
+    </div>
+
+    ${limitNote}
+
+    <div class="law-box">
+      <strong>The new 2026 rules:</strong> From 6 April 2026, SSP is paid <strong>from day one</strong> (no waiting days). There's <strong>no earnings threshold</strong> — if you're an employee, you qualify. Rate is the lower of £123.25/wk or 80% of your average weekly earnings. SSP is paid through payroll and taxed like normal wages.
+      <span class="source">Employment Rights Act 2025 · <a href="https://www.gov.uk/statutory-sick-pay" target="_blank" rel="noopener">gov.uk/statutory-sick-pay</a></span>
+    </div>
+
+    <div class="action-box">
+      <h4>Getting paid less than this?</h4>
+      <p>You can self-certify for the first 7 days of illness. For longer, you'll need a fit note. If your employer refuses SSP, ask for form SSP1 explaining why — they're legally required to give it.</p>
+      <p><a href="https://www.gov.uk/statutory-sick-pay/eligibility" target="_blank" rel="noopener">Check SSP eligibility on gov.uk →</a></p>
+    </div>
+  `;
+  renderResult('s-result', html);
+}
+
+// ===================================================================
+// 3. NOTICE PERIOD
+// ===================================================================
+function calcNotice() {
+  const years = parseInt(document.getElementById('n-years').value) || 0;
+  const months = parseInt(document.getElementById('n-months').value) || 0;
+  const hasContract = document.getElementById('n-contract').value === 'yes';
+  const contractWeeks = parseInt(document.getElementById('n-contract-weeks').value) || 0;
+
+  let statutoryWeeks = 0;
+  let explanation = '';
+
+  if (years === 0 && months < 1) {
+    statutoryWeeks = 0;
+    explanation = 'Under 1 month of service — no statutory notice is owed by law. Your contract may still require some.';
+  } else if (years < 2) {
+    statutoryWeeks = 1;
+    explanation = 'Between 1 month and 2 years of service — 1 week statutory minimum.';
+  } else if (years < 12) {
+    statutoryWeeks = years;
+    explanation = `${years} complete years of service — 1 week per year = ${years} weeks.`;
+  } else {
+    statutoryWeeks = 12;
+    explanation = 'Over 12 years of service — capped at the statutory maximum of 12 weeks.';
+  }
+
+  const applies = Math.max(statutoryWeeks, hasContract ? contractWeeks : 0);
+  const contractualBeats = hasContract && contractWeeks > statutoryWeeks;
+
+  const html = `
+    <div class="eyebrow">03 · Notice period</div>
+    <div class="big-number">${statutoryWeeks}<span class="unit">${statutoryWeeks === 1 ? 'week' : 'weeks'} min</span></div>
+    <div class="big-subtitle">${explanation}</div>
+
+    <div class="breakdown">
+      <h3>Your position</h3>
+      <div class="breakdown-row"><span class="label">Length of service</span><span class="value">${years > 0 ? pluralise(years, 'year') : pluralise(months, 'month')}</span></div>
+      <div class="breakdown-row"><span class="label">Statutory minimum</span><span class="value">${pluralise(statutoryWeeks, 'week')}</span></div>
+      ${hasContract ? `<div class="breakdown-row"><span class="label">Your contract says</span><span class="value">${pluralise(contractWeeks, 'week')}</span></div>` : ''}
+      <div class="breakdown-row total"><span class="label">Notice that applies to you</span><span class="value">${pluralise(applies, 'week')}</span></div>
+    </div>
+
+    ${contractualBeats ? `
+      <div class="warning" style="background: rgba(62, 95, 62, 0.08); border-color: var(--forest);">
+        <strong style="color: var(--forest);">Your contract wins:</strong> it gives you longer notice than the statutory minimum — your employer must honour the ${contractWeeks}-week contractual notice.
+      </div>
+    ` : ''}
+
+    <div class="law-box">
+      <strong>The law:</strong> Employment Rights Act 1996, section 86. Statutory notice is 1 week after 1 month's service, then 1 week per complete year of service, capped at 12 weeks after 12 years. Your contract can always give you <em>more</em> notice — never less. If you're dismissed without proper notice, that's usually unlawful and you can claim notice pay (plus wrongful dismissal).
+      <span class="source"><a href="https://www.legislation.gov.uk/ukpga/1996/18/section/86" target="_blank" rel="noopener">Employment Rights Act 1996, s.86</a> · gov.uk/notice-periods</span>
+    </div>
+
+    <div class="action-box">
+      <h4>Being let go without notice?</h4>
+      <p>Unless it's gross misconduct, you're entitled to notice pay (or pay in lieu — PILON). This is separate from redundancy pay. If your employer skips it, you can claim it at an Employment Tribunal.</p>
+      <p><a href="https://www.gov.uk/dismissal/dismissals-due-to-misconduct-or-poor-performance" target="_blank" rel="noopener">gov.uk guidance on dismissals →</a></p>
+    </div>
+  `;
+  renderResult('n-result', html);
+}
+
+// ===================================================================
+// 4. REDUNDANCY PAY
+// ===================================================================
+function calcRedundancy() {
+  const age = parseInt(document.getElementById('r-age').value) || 0;
+  const serviceYears = parseInt(document.getElementById('r-years').value) || 0;
+  const weeklyPay = parseFloat(document.getElementById('r-weekly').value) || 0;
+
+  if (age < 16) { alert('Please enter a valid age (16 or over).'); return; }
+  if (weeklyPay <= 0) { alert('Please enter your weekly pay.'); return; }
+
+  // Eligibility
+  if (serviceYears < RATES_2026.redundancy.minServiceYears) {
+    renderResult('r-result', `
+      <div class="eyebrow">04 · Redundancy pay</div>
+      <div class="big-number">£0</div>
+      <div class="big-subtitle">You need <strong>at least 2 years</strong> of continuous service to qualify for statutory redundancy pay.</div>
+      <div class="law-box">
+        <strong>The law:</strong> Employment Rights Act 1996, s.155. Statutory redundancy pay only kicks in after 2 years of continuous service.
+        <span class="source"><a href="https://www.legislation.gov.uk/ukpga/1996/18/section/155" target="_blank" rel="noopener">ERA 1996, s.155</a></span>
+      </div>
+      <div class="action-box">
+        <h4>But you're not empty-handed</h4>
+        <p>You're still owed: statutory notice pay, any accrued holiday pay, your final wages. Your employer may also offer enhanced redundancy regardless of service.</p>
+      </div>
+    `);
+    return;
+  }
+
+  const cappedYears = Math.min(serviceYears, RATES_2026.redundancy.maxYears);
+  const cappedPay = Math.min(weeklyPay, RATES_2026.redundancy.weeklyCap);
+  const payCapped = weeklyPay > RATES_2026.redundancy.weeklyCap;
+  const yearsCapped = serviceYears > RATES_2026.redundancy.maxYears;
+
+  // Calculate weeks: iterate through each year of service (most recent N years if capped)
+  const startAge = age - cappedYears;
+  let weeks = 0;
+  let under22 = 0, mid = 0, over41 = 0;
+
+  for (let i = 0; i < cappedYears; i++) {
+    const ageThatYear = startAge + i;
+    if (ageThatYear < 22) { weeks += 0.5; under22++; }
+    else if (ageThatYear < 41) { weeks += 1; mid++; }
+    else { weeks += 1.5; over41++; }
+  }
+
+  const rawTotal = weeks * cappedPay;
+  const total = Math.min(rawTotal, RATES_2026.redundancy.maxTotal);
+  const hitAbsoluteCap = rawTotal > RATES_2026.redundancy.maxTotal;
+  const taxFree = Math.min(total, RATES_2026.redundancy.taxFreeCap);
+
+  let breakdown = '';
+  if (under22 > 0) breakdown += `<div class="breakdown-row"><span class="label">Years worked under 22</span><span class="value">${under22} × 0.5 = ${(under22 * 0.5)} weeks</span></div>`;
+  if (mid > 0) breakdown += `<div class="breakdown-row"><span class="label">Years worked aged 22–40</span><span class="value">${mid} × 1 = ${mid} weeks</span></div>`;
+  if (over41 > 0) breakdown += `<div class="breakdown-row"><span class="label">Years worked aged 41+</span><span class="value">${over41} × 1.5 = ${(over41 * 1.5)} weeks</span></div>`;
+
+  const html = `
+    <div class="eyebrow">04 · Statutory redundancy pay</div>
+    <div class="big-number">${moneyWhole(total)}</div>
+    <div class="big-subtitle">That's <strong>${weeks} weeks</strong> of capped pay${hitAbsoluteCap ? `, capped at the statutory maximum of £22,530` : ''}.</div>
+
+    <div class="breakdown">
+      <h3>How it breaks down</h3>
+      ${breakdown}
+      <div class="breakdown-row"><span class="label">Total qualifying weeks</span><span class="value">${weeks} weeks</span></div>
+      <div class="breakdown-row"><span class="label">Weekly pay used</span><span class="value">${money(cappedPay)}${payCapped ? ' (capped from ' + money(weeklyPay) + ')' : ''}</span></div>
+      ${yearsCapped ? `<div class="breakdown-row"><span class="label">Service used</span><span class="value">${cappedYears} yrs (capped from ${serviceYears})</span></div>` : ''}
+      <div class="breakdown-row total"><span class="label">Statutory redundancy pay</span><span class="value">${moneyWhole(total)}</span></div>
+    </div>
+
+    <div class="warning" style="background: rgba(62, 95, 62, 0.08); border-color: var(--forest);">
+      <strong style="color: var(--forest);">Good news on tax:</strong> redundancy pay is tax-free up to £30,000. Your statutory amount of ${moneyWhole(total)} is fully tax-free. Notice pay, PILON and holiday pay are <em>taxable</em> separately.
+    </div>
+
+    ${payCapped ? `<div class="warning"><strong>Weekly pay cap applied:</strong> your real weekly pay is ${money(weeklyPay)} but the statutory cap of £751/week is used. Your employer may offer <em>enhanced</em> redundancy using your actual pay — check your contract or handbook.</div>` : ''}
+
+    <div class="law-box">
+      <strong>The formula:</strong> For each complete year of service (max 20), you get:
+      <ul style="margin: 8px 0 0 20px; padding: 0; font-size: 13px;">
+        <li>0.5 week's pay for years aged under 22</li>
+        <li>1 week's pay for years aged 22–40</li>
+        <li>1.5 weeks' pay for years aged 41+</li>
+      </ul>
+      <span class="source">Employment Rights Act 1996, s.162 · <a href="https://www.legislation.gov.uk/uksi/2026" target="_blank" rel="noopener">Employment Rights (Increase of Limits) Order 2026</a> · gov.uk/calculate-your-redundancy-pay</span>
+    </div>
+
+    <div class="action-box">
+      <h4>Plus what else you're owed</h4>
+      <p>On top of your ${moneyWhole(total)} statutory redundancy, you should also receive: your statutory or contractual <strong>notice pay</strong>, any <strong>unused holiday pay</strong>, and any remaining <strong>wages</strong> owed. Check your contract for enhanced redundancy too.</p>
+      <p><a href="https://www.gov.uk/redundancy-your-rights" target="_blank" rel="noopener">Full redundancy rights on gov.uk →</a></p>
+    </div>
+  `;
+  renderResult('r-result', html);
+}
+</script>
+</body>
+</html>

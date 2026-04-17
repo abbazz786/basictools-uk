@@ -570,6 +570,7 @@ const TOOLS = [
   { id:"wages", name:"National Wage Checker", desc:"Check if you're being paid correctly, see your April 2026 wage increase, and view all UK rates since 2018.", icon:"💷", status:"live", color:"#3b82f6" },
   { id:"invoice", name:"Invoice Generator", desc:"Create professional UK invoices with VAT. Print or save as PDF. No sign-up.", icon:"📄", status:"live", color:"#f59e0b" },
   { id:"priceview", name:"PriceView", desc:"See what any UK property sold for. Search by postcode, browse on a map.", icon:"\ud83c\udfe0", status:"live", color:"#C9A962" },
+  { id:"rights", name:"UK Rights Checker", desc:"Know exactly what you're owed \u2014 holiday, sick pay, notice and redundancy. Updated for April 2026.", icon:"\u2696\ufe0f", status:"live", color:"#8b5cf6", href:"/rights-checker.html" },
 ];
 
 export default function BasicToolsApp() {
@@ -641,7 +642,7 @@ function Landing({ navigate }) {
             const h = hovered===tool.id;
             return (
               <div key={tool.id} onMouseEnter={()=>setHovered(tool.id)} onMouseLeave={()=>setHovered(null)}
-                onClick={()=>{ if(tool.link){window.open(tool.link,"_blank");return;} if(live)navigate('/'+tool.id); }}
+                onClick={()=>{ if(tool.href){window.location.href=tool.href;return;} if(tool.link){window.open(tool.link,"_blank");return;} if(live)navigate('/'+tool.id); }}
                 style={{ background:h&&live?"rgba(255,255,255,0.05)":"rgba(255,255,255,0.02)",border:`1px solid ${h&&live?tool.color+"44":"rgba(255,255,255,0.06)"}`,borderRadius:"12px",padding:"22px",cursor:live?"pointer":"default",transition:"all 0.2s",position:"relative",opacity:live?1:0.45 }}>
                 {live&&<div style={{ position:"absolute",top:"11px",right:"11px",fontSize:"9px",textTransform:"uppercase",letterSpacing:"1px",color:tool.color,fontWeight:"700",background:tool.color+"15",padding:"2px 7px",borderRadius:"4px" }}>● Live</div>}
                 {!live&&<div style={{ position:"absolute",top:"11px",right:"11px",fontSize:"9px",textTransform:"uppercase",letterSpacing:"1px",color:"#555",fontWeight:"600",background:"rgba(255,255,255,0.03)",padding:"2px 7px",borderRadius:"4px" }}>Soon</div>}
