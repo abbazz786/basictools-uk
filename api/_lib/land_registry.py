@@ -42,13 +42,18 @@ def _build_sparql_query(postcode: str) -> str:
 def fetch_transactions_by_postcode(postcode: str) -> list:
     """Fetch Land Registry sales data for a UK postcode (synchronous, stdlib-only)."""
     query = _build_sparql_query(postcode)
-    params = urllib.parse.urlencode({"query": query, "output": "json"})
-    url = f"https://landregistry.data.gov.uk/landregistry/query?{params}"
+    url = "https://landregistry.data.gov.uk/landregistry/query"
+    form_data = urllib.parse.urlencode({"query": query}).encode("utf-8")
 
     try:
         req = urllib.request.Request(
             url,
-            headers={"Accept": "application/sparql-results+json"},
+            data=form_data,
+            method="POST",
+            headers={
+                "Accept": "application/sparql-results+json",
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
         )
         with urllib.request.urlopen(req, timeout=25) as resp:
             data = json.loads(resp.read().decode("utf-8"))
