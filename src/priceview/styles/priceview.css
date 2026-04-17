@@ -946,6 +946,25 @@
   text-align: center;
 }
 
+.pv-ar-empty-hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--pv-brass);
+  border-radius: var(--pv-radius-md);
+  padding: 20px 28px;
+  font-size: 13px;
+  color: var(--pv-text-primary);
+  text-align: center;
+  line-height: 1.5;
+  max-width: 280px;
+  box-shadow: var(--pv-shadow-glow);
+}
+
 /* ─── AR Accuracy ─── */
 .pv-ar-accuracy {
   position: absolute;

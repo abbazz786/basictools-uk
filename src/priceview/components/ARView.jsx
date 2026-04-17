@@ -5,7 +5,7 @@ import useDeviceOrientation from "../hooks/useDeviceOrientation.js";
 import ARPropertyCard from "./ARPropertyCard.jsx";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "";
-const FOV = 60; // Field of view in degrees
+const FOV = 90; // Field of view in degrees (wider than typical to show more cards)
 
 /**
  * Calculate bearing from point A to point B (in degrees, 0 = North)
@@ -85,9 +85,9 @@ export default function ARView({ onSelectProperty, onBack }) {
       setLoading(true);
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000);
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
         const res = await fetch(
-          `${API_URL}/api/properties/nearby?lat=${geo.latitude}&lng=${geo.longitude}&radius=200`,
+          `${API_URL}/api/properties/nearby?lat=${geo.latitude}&lng=${geo.longitude}&radius=500`,
           { signal: controller.signal }
         );
         clearTimeout(timeoutId);
@@ -95,17 +95,37 @@ export default function ARView({ onSelectProperty, onBack }) {
         if (!res.ok) throw new Error("Failed to fetch nearby properties");
         const data = await res.json();
         if (!cancelled) {
-          // Add bearing and distance to each property
-          const enriched = (data.properties || []).map((p) => {
-            if (p.latitude && p.longitude) {
-              return {
+          // Group by postcode, then spread same-postcode properties across
+          // a small arc so they don't all stack on the exact same bearing.
+          const byPostcode = new Map();
+          for (const p of data.properties || []) {
+            const key = p.postcode || "_";
+            if (!byPostcode.has(key)) byPostcode.set(key, []);
+            byPostcode.get(key).push(p);
+          }
+
+          const enriched = [];
+          for (const [, group] of byPostcode) {
+            group.forEach((p, idx) => {
+              if (p.latitude == null || p.longitude == null) {
+                enriched.push(p);
+                return;
+              }
+              const n = group.length;
+              const spread = 30;
+              const offset = n > 1 ? (idx / (n - 1) - 0.5) * spread : 0;
+              const baseBearing = getBearing(
+                geo.latitude, geo.longitude, p.latitude, p.longitude
+              );
+              enriched.push({
                 ...p,
-                bearing: getBearing(geo.latitude, geo.longitude, p.latitude, p.longitude),
-                distance: getDistance(geo.latitude, geo.longitude, p.latitude, p.longitude),
-              };
-            }
-            return p;
-          });
+                bearing: (baseBearing + offset + 360) % 360,
+                distance: getDistance(
+                  geo.latitude, geo.longitude, p.latitude, p.longitude
+                ),
+              });
+            });
+          }
           setProperties(enriched);
           setFetchError(null);
         }
@@ -121,8 +141,8 @@ export default function ARView({ onSelectProperty, onBack }) {
     };
 
     fetchNearby();
-    // Refetch every 5 seconds as user moves
-    const interval = setInterval(fetchNearby, 5000);
+    // Refetch every 30 seconds as user moves
+    const interval = setInterval(fetchNearby, 30000);
     return () => {
       cancelled = true;
       clearInterval(interval);
@@ -185,7 +205,7 @@ export default function ARView({ onSelectProperty, onBack }) {
       <div className="pv-ar-overlay">
         {/* Floating property cards */}
         {properties.map((property, i) => {
-          if (!property.bearing || orientation.heading === null) return null;
+          if (property.bearing === undefined || orientation.heading === null) return null;
 
           const x = getScreenX(property.bearing, orientation.heading, screenWidth);
           if (x === null) return null; // Not in FOV
@@ -240,6 +260,22 @@ export default function ARView({ onSelectProperty, onBack }) {
         {noCompass && (
           <div className="pv-ar-error-banner">
             Compass not available — cards shown at estimated positions
+          </div>
+        )}
+
+        {/* Helpful empty state */}
+        {!loading && !fetchError && properties.length === 0 && geo.latitude && (
+          <div className="pv-ar-empty-hint">
+            No property sales in the last 500m.
+            <br />
+            Try moving to a residential area.
+          </div>
+        )}
+
+        {/* Waiting for compass */}
+        {orientation.heading === null && !sensorError && properties.length > 0 && (
+          <div className="pv-ar-empty-hint">
+            Move your phone in a figure-8 to calibrate the compass...
           </div>
         )}
 
