@@ -13,30 +13,20 @@ PROPERTY_TYPES = {
 
 def _build_sparql_query(postcode: str) -> str:
     formatted = postcode[:-3] + " " + postcode[-3:] if len(postcode) > 3 else postcode
-    return f"""
-    PREFIX lrppi: <http://landregistry.data.gov.uk/def/ppi/>
-    PREFIX lrcommon: <http://landregistry.data.gov.uk/def/common/>
-
-    SELECT ?paon ?saon ?street ?town ?county ?postcode ?amount ?date ?category
-    WHERE {{
-        ?txn lrppi:pricePaid ?amount ;
-             lrppi:transactionDate ?date ;
-             lrppi:propertyAddress ?addr .
-
-        OPTIONAL {{ ?txn lrppi:propertyType ?category . }}
-
-        ?addr lrcommon:postcode "{formatted}" ;
-              lrcommon:paon ?paon ;
-              lrcommon:street ?street ;
-              lrcommon:town ?town .
-
-        OPTIONAL {{ ?addr lrcommon:saon ?saon . }}
-        OPTIONAL {{ ?addr lrcommon:county ?county . }}
-        OPTIONAL {{ ?addr lrcommon:postcode ?postcode . }}
-    }}
-    ORDER BY DESC(?date)
-    LIMIT 100
-    """
+    # Simplified query — fewer OPTIONALs, lower LIMIT for serverless speed
+    return f"""PREFIX lrppi: <http://landregistry.data.gov.uk/def/ppi/>
+PREFIX lrcommon: <http://landregistry.data.gov.uk/def/common/>
+SELECT ?paon ?saon ?street ?town ?amount ?date ?category WHERE {{
+  ?addr lrcommon:postcode "{formatted}" ;
+        lrcommon:paon ?paon ;
+        lrcommon:street ?street ;
+        lrcommon:town ?town .
+  ?txn lrppi:propertyAddress ?addr ;
+       lrppi:pricePaid ?amount ;
+       lrppi:transactionDate ?date .
+  OPTIONAL {{ ?addr lrcommon:saon ?saon }}
+  OPTIONAL {{ ?txn lrppi:propertyType ?category }}
+}} ORDER BY DESC(?date) LIMIT 30"""
 
 
 def fetch_transactions_by_postcode(postcode: str, return_debug: bool = False):
@@ -57,7 +47,7 @@ def fetch_transactions_by_postcode(postcode: str, return_debug: bool = False):
                 "Content-Type": "application/x-www-form-urlencoded",
             },
         )
-        with urllib.request.urlopen(req, timeout=25) as resp:
+        with urllib.request.urlopen(req, timeout=8) as resp:
             raw = resp.read().decode("utf-8")
             debug["http_status"] = resp.status
             debug["response_len"] = len(raw)
