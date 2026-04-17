@@ -40,7 +40,15 @@ class handler(BaseHTTPRequestHandler):
         all_properties = []
         for pc_info in nearby_postcodes[:3]:  # limit to 3 postcodes for serverless time budget
             pc = pc_info["postcode"].replace(" ", "").upper()
+            pc_lat = pc_info.get("latitude")
+            pc_lng = pc_info.get("longitude")
             props = fetch_transactions_by_postcode(pc)
+            # Attach postcode-level lat/lng to each property so the frontend
+            # can calculate bearings/distances for the AR view.
+            for p in props:
+                p["latitude"] = pc_lat
+                p["longitude"] = pc_lng
+                p["postcode_distance"] = pc_info.get("distance", 0)
             all_properties.extend(props)
 
         all_properties.sort(key=lambda p: p.get("transaction_date") or "", reverse=True)
